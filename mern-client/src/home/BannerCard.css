@@ -1,9 +1,9 @@
 .banner .swiper {
     width: 240px;
     height: 320px;
-  }
-  
- .banner .swiper-slide {
+}
+
+.banner .swiper-slide {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -11,28 +11,31 @@
     font-size: 22px;
     font-weight: bold;
     color: #fff;
-  }
-  
-  .banner .swiper-slide:nth-child(1n) {
-    background-image: url('src/assets/book1.png');
-  }
-  
-  .banner .swiper-slide:nth-child(2n) {
-    background-image: url('src/assets/book2.png');
-  }
-  
-  .banner .swiper-slide:nth-child(3n) {
-    background-image: url('src/assets/book3.png');
-  }
-  
-  .banner .swiper-slide:nth-child(4n) {
-    background-image: url('src/assets/book4.png');
-  }
-  
-  .banner .swiper-slide:nth-child(5n) {
-    background-image: url('src/assets/book5.png');
-  }
-  
+    /* Common properties for all slides */
+    background-size: cover;
+    background-position: center;
+}
+
+/* Use ../ to go out of 'home' and into 'assets' */
+.banner .swiper-slide:nth-child(1) {
+    background-image: url('../assets/book1.png');
+}
+
+.banner .swiper-slide:nth-child(2) {
+    background-image: url('../assets/book2.png');
+}
+
+.banner .swiper-slide:nth-child(3) {
+    background-image: url('../assets/book3.png');
+}
+
+.banner .swiper-slide:nth-child(4) {
+    background-image: url('../assets/book4.png');
+}
+
+.banner .swiper-slide:nth-child(5) {
+    background-image: url('../assets/book5.png');
+}
 
   
   
