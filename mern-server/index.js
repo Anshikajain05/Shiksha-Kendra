@@ -11,11 +11,7 @@ const port = process.env.PORT || 5000;
 
 // 1. Middleware
 app.use(cors({
-    origin: [
-        "http://localhost:5173",
-        "https://shiksha-kendra-7gfe.vercel.app", // Main URL from Screenshot 2
-        "https://shiksha-kendra-7gfe-git-main-anshikajain05s-projects.vercel.app" // Git URL
-    ],
+    origin: "https://shiksha-kendra-7gfe-31cqhnnio-anshikajain05s-projects.vercel.app",
     credentials: true
 }));
 
