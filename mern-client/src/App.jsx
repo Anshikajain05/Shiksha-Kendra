@@ -3,7 +3,7 @@ import { useState } from 'react'
 import './App.css'
 import {Outlet} from 'react-router-dom'
 import Navbar from './component/Navbar'
-import MyFooter from './component/myFooter'
+import MyFooter from './component/MyFooter'
 function App() {
   const [count, setCount] = useState(0)
 
