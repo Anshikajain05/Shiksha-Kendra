@@ -11,12 +11,13 @@
     font-size: 22px;
     font-weight: bold;
     color: #fff;
-    /* Common properties for all slides */
+    /* Added these to make sure images look good */
     background-size: cover;
     background-position: center;
+    background-repeat: no-repeat;
 }
 
-/* Use ../ to go out of 'home' and into 'assets' */
+/* Use ../ to exit 'home' folder and enter 'assets' folder */
 .banner .swiper-slide:nth-child(1) {
     background-image: url('../assets/book1.png');
 }
