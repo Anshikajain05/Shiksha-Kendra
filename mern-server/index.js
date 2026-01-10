@@ -199,4 +199,5 @@ app.delete("/book/:id", async (req, res) => {
 run().catch(console.dir);
 
 app.get('/', (req, res) => res.send('Shiksha Kendra Server Running'));
-app.listen(port, () => console.log(`🚀 Server listening on port ${port}`));
+module.exports = app
+// app.listen(port, () => console.log(`🚀 Server listening on port ${port}`));
