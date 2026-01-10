@@ -12,7 +12,10 @@ const port = process.env.PORT || 5000;
 // 1. Middleware
 app.use(cors());
 app.use(express.json());
-
+app.use(cors({
+    origin: "https://shiksha-kendra-7gfe-31cqhnnio-anshikajain05s-projects.vercel.app",
+    credentials: true
+}));
 // 2. Cloudinary Configuration
 // These values MUST be added to Vercel Environment Variables
 cloudinary.config({
