@@ -12,13 +12,11 @@ const port = process.env.PORT || 5000;
 // 1. Middleware
 app.use(cors({
     origin: [
-        "http://localhost:5173", // For local testing
-        "https://shiksha-kendra-7gfe-31cqhnnio-anshikajain05s-projects.vercel.app", // Your specific Vercel link
-        "https://shiksha-kendra-7gfe.vercel.app" // Your main production link
+        "http://localhost:5173",
+        "https://shiksha-kendra-7gfe.vercel.app", // Main URL from Screenshot 2
+        "https://shiksha-kendra-7gfe-git-main-anshikajain05s-projects.vercel.app" // Git URL
     ],
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    allowedHeaders: ["Content-Type", "Authorization"]
+    credentials: true
 }));
 
 // 2. JSON MIDDLEWARE (must come after CORS)
