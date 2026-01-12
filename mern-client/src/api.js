@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-// This ensures Vercel uses the dashboard variable, while your laptop uses localhost
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+const url = `${API_BASE_URL}/all-stories`;
 
 const API = axios.create({
     baseURL: API_URL,
