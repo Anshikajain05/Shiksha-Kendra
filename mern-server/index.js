@@ -14,7 +14,7 @@ const port = process.env.PORT || 5000;
 
 app.use(cors({
     origin: [
-        "https://shiksha-kendra-7gfe.vercel.app", // Your Main Frontend URL
+        "https://shiksha-kendra.vercel.app", // Your Main Frontend URL
                           // Keep for local testing
     ],
     credentials: true,
