@@ -10,15 +10,16 @@ require('dotenv').config();
 const port = process.env.PORT || 5000;
 
 // 1. Middleware
+
+
 app.use(cors({
     origin: [
-        "http://localhost:5173", // Keep this for local testing
-        "https://shiksha-kendra-7gfe.vercel.app", // YOUR MAIN PRODUCTION URL
-        "https://shiksha-kendra-7gfe-git-main-anshikajain05s-projects.vercel.app" // YOUR BRANCH URL
+        "https://shiksha-kendra-7gfe.vercel.app", // Your Main Frontend URL
+        "http://localhost:5173"                    // Keep for local testing
     ],
-    credentials: true
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE"]
 }));
-
 // 2. JSON MIDDLEWARE (must come after CORS)
 app.use(express.json());
 // 2. Cloudinary Configuration
