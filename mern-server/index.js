@@ -10,15 +10,12 @@ require('dotenv').config();
 // Use process.env.PORT for Render/Vercel compatibility
 const port = process.env.PORT || 5000;
 
-// 1. Middleware
 app.use(cors({
     origin: [
-        "https://shiksha-kendra.vercel.app", // Your Production URL
-        "http://localhost:5173",             // Local Vite Dev URL
-        /\.vercel\.app$/                     // Allows all Vercel preview links
+        "https://shiksha-kendra-7gfe.vercel.app", // Your actual Vercel Frontend
+        "http://localhost:5173"                  // For your local testing
     ],
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"]
+    credentials: true
 }));
 
 app.use(express.json());
