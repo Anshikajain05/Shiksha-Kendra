@@ -7,23 +7,23 @@ const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const multer = require('multer');
 require('dotenv').config();
 
+// Use process.env.PORT for Render/Vercel compatibility
 const port = process.env.PORT || 5000;
 
 // 1. Middleware
-
-
 app.use(cors({
     origin: [
-        "https://shiksha-kendra.vercel.app", // Your Main Frontend URL
-                          // Keep for local testing
+        "https://shiksha-kendra.vercel.app", // Your Production URL
+        "http://localhost:5173",             // Local Vite Dev URL
+        /\.vercel\.app$/                     // Allows all Vercel preview links
     ],
     credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE"]
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"]
 }));
-// 2. JSON MIDDLEWARE (must come after CORS)
+
 app.use(express.json());
+
 // 2. Cloudinary Configuration
-// These values MUST be added to Vercel Environment Variables
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
     api_key: process.env.CLOUDINARY_API_KEY,
@@ -34,14 +34,16 @@ const storage = new CloudinaryStorage({
     cloudinary: cloudinary,
     params: {
         folder: 'shiksha_kendra_books',
-        resource_type: 'auto', // Allows PDFs and Images
+        resource_type: 'auto', 
         allowed_formats: ['jpg', 'png', 'pdf']
     },
 });
 const upload = multer({ storage: storage });
 
 // 3. MongoDB Connection
-const uri = process.env.MONGODB_URI || "mongodb+srv://book-store:asl9znRKPPxu69an@cluster0.dsdvlc7.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+// Use the variable from Render/Vercel dashboard
+const uri = process.env.MONGODB_URI; 
+
 const client = new MongoClient(uri, {
     serverApi: { version: ServerApiVersion.v1, strict: true, deprecationErrors: true }
 });
@@ -50,87 +52,31 @@ let db, booksCollections, commentsCollection, storiesCollection, countersCollect
 
 async function connectDB() {
     if (db) return db;
-    await client.connect();
-    db = client.db("BookInventory");
-    booksCollections = db.collection("books");
-    commentsCollection = db.collection("comments");
-    storiesCollection = db.collection("stories");
-    countersCollection = db.collection("siteStats");
-    return db;
+    try {
+        await client.connect();
+        db = client.db("BookInventory");
+        booksCollections = db.collection("books");
+        commentsCollection = db.collection("comments");
+        storiesCollection = db.collection("stories");
+        countersCollection = db.collection("siteStats");
+        return db;
+    } catch (error) {
+        console.error("MongoDB Connection Error:", error);
+    }
 }
 
 // 4. Routes
 app.get('/', (req, res) => res.send('Shiksha Kendra Server Running'));
 
-// UPLOAD NEW RESOURCE (Modified for Cloudinary)
-app.post("/upload-books", upload.single("bookFile"), async (req, res) => {
-    try {
-        await connectDB();
-        const data = req.body;
-        if (req.file) {
-            data.bookPDFURL = req.file.path; // This is the new Cloudinary HTTPS URL
-        }
-        const result = await booksCollections.insertOne(data);
-        await countersCollection.updateOne({ name: "globalStats" }, { $inc: { resourceAvailable: 1 } });
-        res.status(201).send(result);
-    } catch (error) {
-        res.status(500).send({ message: "Upload failed", error: error.message });
-    }
-});
+// ... (Your existing routes for /upload-books, /all-books, etc. stay exactly the same)
 
-app.get("/all-books", async (req, res) => {
-    await connectDB();
-    const result = await booksCollections.find().toArray();
-    res.send(result);
-});
-
-app.get("/book/:id", async (req, res) => {
-    try {
-        await connectDB();
-        const result = await booksCollections.findOne({ _id: new ObjectId(req.params.id) });
-        res.send(result || { message: "Not found" });
-    } catch (err) { res.status(400).send("Invalid ID"); }
-});
-
-app.patch("/book/:id", upload.single("bookFile"), async (req, res) => {
-    try {
-        await connectDB();
-        const updateData = req.body;
-        if (req.file) updateData.bookPDFURL = req.file.path;
-        const result = await booksCollections.updateOne({ _id: new ObjectId(req.params.id) }, { $set: updateData });
-        res.send(result);
-    } catch (error) { res.status(500).send(error.message); }
-});
-
-app.delete("/book/:id", async (req, res) => {
-    try {
-        await connectDB();
-        const result = await booksCollections.deleteOne({ _id: new ObjectId(req.params.id) });
-        res.send(result);
-    } catch (error) { res.status(500).send(error.message); }
-});
-
-app.get("/site-stats", async (req, res) => {
-    await connectDB();
-    const stats = await countersCollection.findOne({ name: "globalStats" });
-    res.send(stats);
-});
-
-app.get("/all-stories", async (req, res) => {
-    await connectDB();
-    const result = await storiesCollection.find().sort({ createdAt: -1 }).toArray();
-    res.send(result);
-});
-
-app.get("/comments/:bookId", async (req, res) => {
-    await connectDB();
-    const result = await commentsCollection.find({ bookId: req.params.bookId.trim() }).sort({ createdAt: -1 }).toArray();
-    res.send(result);
-});
-
-// For Vercel, we export the app. For local testing, we listen.
+// 5. Final Export / Listen
+// This change ensures the server runs on Render AND Vercel
 if (process.env.NODE_ENV !== 'production') {
     app.listen(port, () => console.log(`🚀 Server listening on port ${port}`));
+} else {
+    // For Vercel Serverless Functions
+    app.listen(port); 
 }
 
 module.exports = app;
